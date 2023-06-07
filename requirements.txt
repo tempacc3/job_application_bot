@@ -1,0 +1,6 @@
+flask
+playwright
+pandas
+rich
+pdfminer.six
+prompt_toolkit
