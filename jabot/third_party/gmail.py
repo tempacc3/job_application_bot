@@ -1,6 +1,7 @@
-from third_party.browser import Browser
-from playwright._impl._api_types import TimeoutError as PlaywrightTimeoutError
+from .browser import Browser
 from time import sleep
+from playwright._impl._api_types import TimeoutError as PlaywrightTimeoutError
+
 
 class Gmail(Browser):
     

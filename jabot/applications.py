@@ -1,6 +1,7 @@
 from pdfminer.high_level import extract_text
 from pdfminer.pdfparser import PDFSyntaxError
 import pandas as pd
+from time import sleep
 
 class Applications:
 
@@ -69,12 +70,15 @@ class Applications:
 
                 cover_letter = pre + cover_letter + post
                 self.chatgpt.new_conversation()
+
             except PermissionError as e:
                 raise e
 
             except Exception as e:
-                subject = "Job application"
-                cover_letter = "Failed to write cover letter"
+                if live:
+                    live.update(f"[bold red]❌ Failed to write appliation for [bold white]{job['Title']}[/bold white]: {str(e)}[/bold red]")
+                    sleep(4)
+                continue
 
             self.df.loc[len(self.df)] = [
                 job["Title"],
@@ -96,5 +100,9 @@ class Applications:
 
     def send(self, application):
         self.gmail.start()
-        self.gmail.send(application)
+        try:
+            self.gmail.send(application)
+        except Exception as e:
+            self.gmail.stop()
+            raise e
         self.gmail.stop()

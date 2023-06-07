@@ -1,6 +1,6 @@
 from abc import ABC
-
 from playwright.sync_api import sync_playwright
+
 
 class Browser(ABC):
 

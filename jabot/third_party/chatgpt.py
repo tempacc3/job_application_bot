@@ -1,8 +1,9 @@
+from .browser import Browser
+from time import sleep
 import base64
 import json
 import uuid
-from time import sleep
-from third_party.browser import Browser
+
 
 class ChatGPT(Browser):
     response_div_id = "chatgpt-wrapper-conversation-response-data"
@@ -11,6 +12,11 @@ class ChatGPT(Browser):
     def __init__(self):
         super().__init__(page_address="https://chat.openai.com/")
         self.parent_message_id = str(uuid.uuid4())
+        self.conversation_id = None
+        self.session = None
+
+    def stop(self):
+        super().stop()
         self.conversation_id = None
         self.session = None
 
@@ -46,7 +52,7 @@ class ChatGPT(Browser):
 
         self.page.evaluate(f"document.getElementById('{self.session_div_id}').remove()")
 
-    def ask(self, prompt: str, model: str = "gpt-3.5", timeout_s: int = 30):
+    def ask(self, prompt: str, model: str = "gpt-3.5"):
         if not self.play:
             raise AssertionError("Browser hasn't been started")
         if self.session is None:
@@ -124,7 +130,6 @@ class ChatGPT(Browser):
             self.page.evaluate(f"document.getElementById('{self.response_div_id}').remove()")
             return full_response_message
         except Exception as e:
-            self.stop()
             raise e
 
     def new_conversation(self):
@@ -132,5 +137,3 @@ class ChatGPT(Browser):
             raise AssertionError("Browser hasn't been started")
         self.parent_message_id = str(uuid.uuid4())
         self.conversation_id = None
-
-

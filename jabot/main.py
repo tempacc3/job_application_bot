@@ -1,9 +1,9 @@
-from third_party.chatgpt import ChatGPT
-from third_party.indeed import Indeed
-from third_party.gmail import Gmail
+from .third_party.chatgpt import ChatGPT
+from .third_party.indeed import Indeed
+from .third_party.gmail import Gmail
 
-from jobs import Jobs
-from applications import Applications
+from .jobs import Jobs
+from .applications import Applications
 
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter, PathCompleter
@@ -18,22 +18,6 @@ from time import sleep
 import pandas as pd
 import os
 
-
-"""
-🎉 Welcome to the Job Application Assistant! 🎉
-
-This assistant is designed to help you with different tasks related to job applications.
-
-Available Options
-
-Here's what you can do:
-
-- **Gather Jobs**: This feature will help you find potential job vacancies.
-- **Write Cover Letters**: This feature assists you in creating professional cover letters.
-- **Send Applications**: Once you're ready, you can use this feature to send out your applications.
-- **Login**: Use this feature to login to your account.
-
-"""
 
 class TUI:
 
@@ -79,14 +63,13 @@ class TUI:
                 for index, job in self.jobs.df.iterrows():
                     sleep(0.2)
                     print("")
-                    print(f"[bold white]{index}.[/bold white]")
+                    print(f"[bold white]{index+1}.[/bold white]")
                     print(f"[bold yellow]What:[/bold yellow] {job['Title']}")
                     print(f"[bold yellow]Where:[/bold yellow] {job['Location']}")
                     print(f"[bold yellow]At:[/bold yellow] {job['Company']}")
                     print(f"[bold yellow]Summary:[/bold yellow] {job['Summary']}")
 
             except Exception as e:
-                raise e
                 live.update(f"[bold red]❌ {str(e)}[/bold red]")
 
 
@@ -134,7 +117,7 @@ class TUI:
                 print("[bold white u]\nWrote applications for following jobs:\n[/bold white u]")
                 for index, application in self.applications.df.iterrows():
                     sleep(0.2)
-                    print(f"[bold white]{index}. [/bold white]{application['Title']}[bold yellow] At [/bold yellow]{application['Company']}")
+                    print(f"[bold white]{index+1}. [/bold white]{application['Title']}[bold yellow] At [/bold yellow]{application['Company']}")
                 print("")
 
             except Exception as e:
@@ -144,43 +127,48 @@ class TUI:
     def send_applications(self):
         self.console.print(Markdown("---"))
         self.console.print(f"Main > Applications > Send Applications", style="yellow", justify="center")
-        self.loaded_applications_df = pd.read_csv("applications.csv")
-        with Live(auto_refresh=True) as live:
-            for index, application in self.loaded_applications_df.iterrows():
-                live.start()
-                if '@' not in str(application['Email']):
-                    live.update(f"\n[bold red]❌ {application['Title']} missing email address, skipping...[/bold red]")
-                    sleep(2)
-                    continue
-                live.update(
-                    ""
-                    f"[bold white]\n{index+1}/{len(self.loaded_applications_df.index)}[/bold white]"
-                    f"[bold yellow u]\nTo:[/bold yellow u] {application['Email']}\n"
-                    f"[bold yellow u]Subject:[/bold yellow u] {application['Subject']}\n"
-                    f"[bold yellow u]\nContent:\n\n[/bold yellow u][italic]{application['Cover Letter']}[/italic]\n"
-                )
-                live.stop()
-                while True:
-                    confirm = input("Do you want to send this application? (yes or no): ")
-                    if confirm == "yes":
-                        live.start()
-                        live.update("[bold green]⏳ Sending application...[/bold green]")
-                        self.applications.send(application)
-                        live.update("[bold green]⌛ Done![/bold green]")
-                        sleep(2)
-                        break
-                    elif confirm == "no":
-                        break
-                    else:
-                        print("[bold red]❌ Answer 'yes' or 'no' please[/bold red]")
-                        
+        try:
+            self.loaded_applications_df = pd.read_csv("applications.csv")
+        except FileNotFoundError:
+            print(f"[bold red]❌ No applications found![/bold red]")
 
+        with Live(auto_refresh=True) as live:
+            try:
+                for index, application in self.loaded_applications_df.iterrows():
+                    live.start()
+                    if '@' not in str(application['Email']):
+                        live.update(f"\n[bold red]❌ {application['Title']} missing email address, skipping...[/bold red]")
+                        sleep(2)
+                        continue
+                    live.update(
+                        ""
+                        f"[bold white]\n{index+1}/{len(self.loaded_applications_df.index)}[/bold white]"
+                        f"[bold yellow u]\nTo:[/bold yellow u] {application['Email']}\n"
+                        f"[bold yellow u]Subject:[/bold yellow u] {application['Subject']}\n"
+                        f"[bold yellow u]\nContent:\n\n[/bold yellow u][italic]{application['Cover Letter']}[/italic]\n"
+                    )
+                    live.stop()
+                    while True:
+                        confirm = input("Do you want to send this application? (yes or no): ")
+                        if confirm == "yes":
+                            live.start()
+                            live.update("[bold green]⏳ Sending application...[/bold green]")
+                            self.applications.send(application)
+                            live.update("[bold green]⌛ Done![/bold green]")
+                            sleep(2)
+                            break
+                        elif confirm == "no":
+                            break
+                        else:
+                            print("[bold red]❌ Answer 'yes' or 'no' please[/bold red]")
+            except Exception as e:
+                live.update(f"[bold red]❌ {str(e)}[/bold red]")
 
     def print_job_info(self, index):
         try:
             job = self.loaded_jobs_df.iloc[index]
             self.console.print(Markdown("---"))
-            self.console.print(f"Main > Jobs > View Jobs > Job {index}.", style="yellow", justify="center")
+            self.console.print(f"Main > Jobs > View Jobs > Job {index+1}.", style="yellow", justify="center")
             print(f"[bold yellow u]Title:[/bold yellow u] {job['Title']}")
             print(f"[bold yellow u]Company:[/bold yellow u] {job['Company']}")
             print(f"[bold yellow u]Location:[/bold yellow u] {job['Location']}")
@@ -196,7 +184,7 @@ class TUI:
         try:
             application = self.loaded_applications_df.iloc[index]
             self.console.print(Markdown("---"))
-            self.console.print(f"Main > Applications > View Applications > Application {index}.", style="yellow", justify="center")
+            self.console.print(f"Main > Applications > View Applications > Application {index+1}.", style="yellow", justify="center")
             print(f"[bold yellow u]\nTitle:[/bold yellow u] {application['Title']}")
             print(f"[bold yellow u]Company:[/bold yellow u] {application['Company']}")
             print(f"[bold yellow u]Email:[/bold yellow u] {application['Email']}")
@@ -265,7 +253,7 @@ class TUI:
             try:
                 self.loaded_jobs_df = pd.read_csv("jobs.csv")
                 for index, job in self.loaded_jobs_df.iterrows():
-                    key = "- " + str(index) + ". " + job["Title"]
+                    key = "- " + str(index+1) + ". " + job["Title"]
                     options[key] = (self.print_job_info, [index])
             except FileNotFoundError:
                 pass
@@ -300,7 +288,7 @@ class TUI:
             try:
                 self.loaded_applications_df = pd.read_csv("applications.csv")
                 for index, application in self.loaded_applications_df.iterrows():
-                    key = "- " + str(index) + ". " + application["Title"]
+                    key = "- " + str(index+1) + ". " + application["Title"]
                     options[key] = (self.print_application_info, [index])
             except FileNotFoundError:
                 pass

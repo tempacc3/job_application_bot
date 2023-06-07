@@ -1,5 +1,5 @@
+from .browser import Browser
 from playwright._impl._api_types import TimeoutError as PlaywrightTimeoutError
-from third_party.browser import Browser
 
 class Indeed(Browser):
 

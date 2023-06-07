@@ -5,8 +5,8 @@ with open('requirements.txt') as f:
     install_requirement = f.readlines()
 
 setup(
-    name="chatGPT",
-    description="A simple Python class for interacting with OpenAI's chatGPT using Playwright",
+    name="Job Application Bot",
+    description="A Python termnial program that fetches jobs, writes and sends job applications!",
     packages=find_packages(),
     install_requires=install_requirement,
     classifiers=[
@@ -17,7 +17,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "chatgpt = chatgpt_wrapper.chatgpt:main"
+            "jabot = jabot.main:main"
         ]
     },
     scripts=["postinstall.bat"] if platform.system() == "Windows" else ["postinstall.sh"],

@@ -1,5 +1,6 @@
 import re
 import pandas as pd
+from time import sleep
 
 class Jobs:
 
@@ -35,7 +36,18 @@ class Jobs:
         for job_data in self.jobs_data:
             if live:
                 live.update(f"[bold green]⏳ Processing '[/bold green][bold white]{job_data['job_title']}[/bold white][bold green]'...[/bold green]")
-            self._process_job_data(job_data)
+            try:
+                self._process_job_data(job_data)
+
+            except PermissionError as e:
+                raise e
+            
+            except Exception:
+                if live:
+                    live.update(f"[bold red]❌ Failed to process [bold white]{job_data['job_title']}[/bold white]: {str(e)}[/bold red]")
+                    sleep(4)
+                continue
+            
         self.chatgpt.stop()
     
 
@@ -55,31 +67,24 @@ class Jobs:
 
         description = job_data["job_description"]
         
-        try:
-            response = self.chatgpt.ask(
-                "From the following text fill in these data points, if no data can be extracted fill it with 'None'. Make the sumamry very short\n"
-                "Person:\n"
-                "Phone:\n"
-                "Email:\n"
-                "Summary:\n\n"
-                + description
-            )
+        response = self.chatgpt.ask(
+            "From the following text fill in these data points, if no data can be extracted fill it with 'None'. Make the sumamry very short\n"
+            "Person:\n"
+            "Phone:\n"
+            "Email:\n"
+            "Summary:\n\n"
+            + description
+        )
 
-            person_match = re.search(r'Person:\s(.+)', response)
-            phone_match = re.search(r'Phone:\s(.+)', response)
-            email_match = re.search(r'Email:\s(.+)', response)
-            summary_match = re.search(r'Summary:\s(.+)', response)
+        person_match = re.search(r'Person:\s(.+)', response)
+        phone_match = re.search(r'Phone:\s(.+)', response)
+        email_match = re.search(r'Email:\s(.+)', response)
+        summary_match = re.search(r'Summary:\s(.+)', response)
 
-            person = person_match.group(1) if person_match else "None"
-            phone = phone_match.group(1) if phone_match else "None"
-            email = email_match.group(1) if email_match else "None"
-            summary = summary_match.group(1) if summary_match else "None"
-        
-        except Exception:
-            person = "None"
-            phone = "None"
-            email = "None"
-            summary = "None"
+        person = person_match.group(1) if person_match else "None"
+        phone = phone_match.group(1) if phone_match else "None"
+        email = email_match.group(1) if email_match else "None"
+        summary = summary_match.group(1) if summary_match else "None"
 
         title = job_data["job_title"]
         location = job_data["job_location"]

@@ -1,3 +1,3 @@
-#!/bin/bash
-echo "Installing playwright"
+@echo off
+echo Installing playwright
 playwright install
