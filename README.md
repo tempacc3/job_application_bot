@@ -23,20 +23,7 @@ venv/Scripts/activate
 Install JABot and it's dependencies directly from github with pip:
 
 ```
-pip install git+https://github.com/tkin-jm/job_application_bot && cd job_application_bot
-```
-
-Or clone the repo and install the package with pip:
-
-```
-git clone https://github.com/tkin-jm/job_application_bot && cd job_application_bot
-pip install .
-```
-
-Lastly you need to install a browser in playwright:
-
-```
-playwright install
+pip install git+https://github.com/tkin-jm/job_application_bot
 ```
 
 Now you can run the program using:
@@ -108,19 +95,20 @@ Navigate menus by typing in an option. Use the up or down arrows to autocomplete
 
 ## Demo
 
+[<img src="https://i.ytimg.com/vi/-09kPe11OK4/maxresdefault.jpg" width="100%">](https://www.youtube.com/watch?v=-09kPe11OK4)
+
 ## Notes
 
 This program uses Playwright to interact with third party functionality, this is very inefficient and often against terms of service. It does, however, bring with it some very big pros.
-
-For a demonstrative program like this, those pros very heavily outweighed the cons.
+For a demonstrative program like this, those pros definitely outweighed the cons.
 
 With ChatGPT, interacting through a browser instead of OpenAI's API circumvents the subscription cost of the API making this program free for everyone. 
-
 With Indeed, interacting through a browser is the only alternative since they do not expose an API.
-
 With Gmail, getting access to their API required having to get the program approved which involved an entire application process. It seemed a bit overkill.
 
 Thus, I was stuck with the current solution and all the flakyness it brings.
+
+There is alot of improvment to be made with the writing of the appliation in regards to the prompts. Currently it just uses the resume and job description to generate cover letters which works okay. They can probably become alot more tailored adn accurate by incorporating more user input. This is however more of a proof of conceåts and as such I feel the current state is sufficient.
 
 ## License
 
