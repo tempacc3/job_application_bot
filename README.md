@@ -1,8 +1,8 @@
 # Welcome to The Job Application Bot, a.k.a JABot!
 
-A Python termnial program that fetches jobs, writes and sends job applications!
+A Python terminal program that fetches jobs, writes and sends job applications!
 
-I made this program as a demonstration of process automation capability in conjunction with me, Jonathan Tekin, applying for automation engineering jobs.
+I made this program as a demonstration of process automation capability in conjunction with me, Jonathan Tekin, applying for jobs in automation and software development.
 
 Thus, the Job Application Bot is in itself a job application. Call it a meta-job-application.
 
@@ -24,6 +24,12 @@ Install JABot and it's dependencies directly from github with pip:
 
 ```
 pip install git+https://github.com/tkin-jm/job_application_bot
+```
+
+Install Playwright
+
+```
+playwright install firefox
 ```
 
 Now you can run the program using:
