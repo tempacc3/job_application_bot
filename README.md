@@ -95,7 +95,7 @@ Navigate menus by typing in an option. Use the up or down arrows to autocomplete
 
 ## Demo
 
-[<img src="https://i.ytimg.com/vi/-09kPe11OK4/maxresdefault.jpg" width="100%">](https://www.youtube.com/watch?v=-09kPe11OK4)
+[Youtube video demonstrating the program](https://www.youtube.com/watch?v=-09kPe11OK4)
 
 ## Notes
 
