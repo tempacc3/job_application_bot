@@ -1,22 +1,14 @@
-from .browser import Browser
+from browser import Browser
 from playwright._impl._api_types import TimeoutError as PlaywrightTimeoutError
+from time import sleep
 
 class Indeed(Browser):
 
-    card_list_selector = "ul.jobsearch-ResultsList.css-0"
-    job_description_selector = "#jobDescriptionText"
-    company_name_selector = (
-        "#jobsearch-ViewjobPaneWrapper > div > div > div > "
-        "div.jobsearch-JobComponent-embeddedHeader > div > div > div:nth-child(1) > "
-        "div.jobsearch-CompanyInfoContainer > div > div > div > div.css-1h46us2.eu4oa1w0 > "
-        "div.css-kyg8or.eu4oa1w0 > div"
-    )
-    job_title_selector = (
-        "#jobsearch-ViewjobPaneWrapper > div > div > div > "
-        "div.jobsearch-JobComponent-embeddedHeader > div > div > div:nth-child(1) > "
-        "div.jobsearch-JobInfoHeader-title-container > h2 > span"
-    )
-    job_location_selector = "div.css-6z8o9s:nth-child(2)"
+    card_list_selector = 'ul.jobsearch-ResultsList.css-0'
+    job_description_selector = '#jobDescriptionText'
+    company_name_selector = '*[class*="companyName"]'
+    job_title_selector = 'span[id*="jobTitle"]'
+    job_location_selector = '*[class*="companyLocation"]'
 
     def __init__(self):
         super().__init__(page_address=None)
@@ -24,7 +16,7 @@ class Indeed(Browser):
 
     def fetch_jobs(self, role: str, location: str) -> list:
         self.page_address = f"https://se.indeed.com/jobs?q={role}&l={location}"
-        self.start()
+        self.start(headless=False)
 
         try:
             card_list = self.page.wait_for_selector(self.card_list_selector, timeout=5000)
@@ -48,12 +40,12 @@ class Indeed(Browser):
                 continue
 
             try:
-                job_data["job_title"] = self.page.wait_for_selector(self.job_title_selector, timeout=4000).text_content()[0:-11]
+                job_data["job_title"] = card.wait_for_selector(self.job_title_selector, timeout=4000).text_content()
             except PlaywrightTimeoutError:
                 continue
 
             try:
-                job_data["company_name"] = self.page.wait_for_selector(self.company_name_selector, timeout=4000).text_content()
+                job_data["company_name"] = card.wait_for_selector(self.company_name_selector, timeout=4000).text_content()
             except PlaywrightTimeoutError:
                 continue
 
@@ -63,11 +55,17 @@ class Indeed(Browser):
                 continue
 
             try:
-                job_data["job_location"] = self.page.wait_for_selector(self.job_location_selector, timeout=4000).text_content()
+                job_data["job_location"] = card.wait_for_selector(self.job_location_selector, timeout=4000).text_content()
             except PlaywrightTimeoutError:
                 continue
                 
             jobs_data.append(job_data)
-        
+
+        print(jobs_data)
+        sleep(30)
         self.stop()
         return jobs_data
+
+
+i = Indeed()
+i.fetch_jobs("lärare", "stockholm")
