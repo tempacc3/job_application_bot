@@ -33,6 +33,7 @@ class Jobs:
             raise AssertionError("No jobs have been fetched")
 
         self.chatgpt.start()
+        self.df = self.df[0:0]
         for job_data in self.jobs_data:
             if live:
                 live.update(f"[bold green]⏳ Processing '[/bold green][bold white]{job_data['job_title']}[/bold white][bold green]'...[/bold green]")
@@ -42,7 +43,7 @@ class Jobs:
             except PermissionError as e:
                 raise e
             
-            except Exception:
+            except Exception as e:
                 if live:
                     live.update(f"[bold red]❌ Failed to process [bold white]{job_data['job_title']}[/bold white]: {str(e)}[/bold red]")
                     sleep(4)

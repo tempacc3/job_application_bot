@@ -42,7 +42,7 @@ class Applications:
             raise Exception("No resume loaded.")
 
         self.chatgpt.start()
-
+        self.df = self.df[0:0]
         for index, job in jobs.iterrows():
 
             if live:
