@@ -19,6 +19,5 @@ setup(
         "console_scripts": [
             "jabot = jabot.main:main"
         ]
-    },
-    scripts=["postinstall.bat"] if platform.system() == "Windows" else ["postinstall.sh"],
+    }
 )

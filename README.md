@@ -1,106 +1,129 @@
-# ChatGPT CLI and Python Wrapper
+# Welcome to The Job Application Bot, a.k.a JABot!
 
-ChatGPT Wrapper is an open-source unofficial Python API and CLI that lets you interact with ChatGPT.
+A Python termnial program that fetches jobs, writes and sends job applications!
 
-## Highlights
+I made this program as a demonstration of process automation capability in conjunction with me, Jonathan Tekin, applying for automation engineering jobs.
 
-🤖 Programmable ChatGPT. The ChatGPT Wrapper lets you use the powerful ChatGPT bot in your Python scripts or on the command line, making it easy to leverage its functionality into your projects.
+Thus, the Job Application Bot is in itself a job application. Call it a meta-job-application.
 
-💬 Runs in Shell. You can call and interact with ChatGPT in the terminal
+## Prerequisites
 
-## How it works
-
-Run an interactive CLI in the terminal:
-
-``` bash
-$ chatgpt
-Provide a prompt for ChatGPT, or type help or ? to list commands.
-1> 
-```
-
-Or just get a quick response for one question:
-
-``` bash
-$ chatgpt What is six times seven?
-
-Six times seven is 42.      
-```
-
-Here's a short demo of some of the CLI features:
-https://user-images.githubusercontent.com/233113/206799611-8807f659-cd4c-449f-9937-843153533a15.mp4
-
-See below for details on using ChatGPT as an API.
-
-## Requirements
-
-To use this repository, you will need to have the following packages installed:
-
-`setuptools`: This package is used to create and manage Python packages.
-You can install it using `pip install setuptools`.
+* Python 3.7
+* Git
 
 ## Installation
 
-You can install the latest version of this software directly from github with pip:
-
-```bash
-pip install git+https://github.com/mmabrouk/chatgpt-wrapper
-```
-
-This will install chatgpt-wrapper and it's dependencies.  
-
-Before starting the program, you will need to install a browser in playwright (if you haven't already).  The program will use firefox by default.
+Create and activate a python virtual environment
 
 ```
-playwright install firefox
+python3 -m venv venv
+venv/Scripts/activate
 ```
 
-With that done, you should start up the program in `install` mode, which will open up a browser window. 
+Install JABot and it's dependencies directly from github with pip:
 
-```bash
-chatgpt install
+```
+pip install git+https://github.com/tkin-jm/job_application_bot && cd job_application_bot
 ```
 
-Log in to ChatGPT in the browser window, then stop the program.  After doing this, restart the program without the `install` parameter to begin using it.
+Or clone the repo and install the package with pip:
+
+```
+git clone https://github.com/tkin-jm/job_application_bot && cd job_application_bot
+pip install .
+```
+
+Lastly you need to install a browser in playwright:
+
+```
+playwright install
+```
+
+Now you can run the program using:
+
+```
+jabot
+```
 
 ## Usage
 
-### Shell
+### Navigation
 
-The shell includes some nice features:
-* It provides commands to start a new conversation, or navigate to past points in the conversation.
-* It provides a command that allows the user to choose between rendered markdown and streaming output (can't have both).
-* It provides a logging option, and the ability to restore any context that's been logged, even from old sessions.
-* It provides a command to read prompts from files, and a command to support reading multi-line prompts.
+Navigate menus by typing in an option. Use the up or down arrows to autocomplete.
 
-### Python
+### Login
 
-To use the `ChatGPT` class as an API for talking to ChatGPT, create an instance of the class and use the `ask` method to send a message to OpenAI and receive the response. For example:
+*Before using **JABot**, make sure you log in to ChatGPT and Gmail.*
 
-```python
-from chatgpt_wrapper import ChatGPT
+* Navigate to `Main > Login` and select one of the login options. 
 
-bot = ChatGPT()
-response = bot.ask("Hello, world!")
-print(response)  # prints the response from chatGPT
-```
+*A browser window will be opened directing you to the login pages of OpenAi or Google.*
 
-The say method takes a string argument representing the message to send to ChatGPT, and returns a string representing the response received from ChatGPT.
+* Simply login as usual then go back to JABot and press enter. 
 
-You may also stream the response as it comes in from ChatGPT in chunks using the `ask_stream` generator.
+*The authentication is persistent meaning you do not need to login again when you restart **JABot**.*
 
-## Projects built with chatgpt-wrapper
+### Finding Jobs
 
-  - [bookast: ChatGPT Podcast Generator For Books](https://github.com/SamMethnani/bookast)
+* Under `Main > Jobs` select `Get Jobs From Indeed`. 
 
-## Contributing
+* Enter a job role and location. 
 
-We welcome contributions to ChatGPT Wrapper! If you have an idea for a new feature or have found a bug, please open an issue on the GitHub repository.
+*The first 18 jobs found on Indeed will be scraped and proccessed by ChatGPT.*
+*The processing will extract releveant information such as email, phone etc. and also write a summary for the description.*
+
+*`View Jobs`, found in the same submenu, lets you view what was collected.*
+
+### Writing applications
+
+* Under `Main > Applications` select `Write applications`. 
+
+*Make sure you have jobs saved from previous fetchings.*
+
+* Enter a the full path to your resume. 
+
+*There is autocomplete to make it more convenient.*
+
+* Next enter the language to write the applications in. 
+
+* Lastly you can choose to prepend/append text to each application which can be useful for adding personal information, discretion notes or whatever.
+
+*`View Applications`, found in the same submenu, lets you view what was written.*
+
+*If you want to make changes to the applicaitons you do that by editing the `applications.csv` file generate by `Write applications`. **Be very careful with the formatting though**.*
+
+### Sending applications
+
+* Under `Main > Applications` select `Send applications`. 
+
+*Before selecting make sure you have applications saved and that you have logged into Gmail.*
+
+*This option will send the written applications to whatever email address was found when processing the job description.*
+*Some job descriptions lack an email address, applications written for these will be skipped. If you want to manually add an email address (or make other changes) to an application you do that by editing the `applications.csv` file generate by `Write applications`.*
+
+* **JABot** will present each application and prompt you to confirm if you want to send it or not.
+
+*In the email, **JABot** attaches the resume previosly entered during the `Write applications` process.*
+
+
+## Demo
+
+## Notes
+
+This program uses Playwright to interact with third party functionality, this is very inefficient and often against terms of service. It does, however, bring with it some very big pros.
+
+For a demonstrative program like this, those pros very heavily outweighed the cons.
+
+With ChatGPT, interacting through a browser instead of OpenAI's API circumvents the subscription cost of the API making this program free for everyone. 
+
+With Indeed, interacting through a browser is the only alternative since they do not expose an API.
+
+With Gmail, getting access to their API required having to get the program approved which involved an entire application process. It seemed a bit overkill.
+
+Thus, I was stuck with the current solution and all the flakyness it brings.
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgments
-
-- This project is a modification from [Taranjeet](https://github.com/taranjeet/chatgpt-api) code which is a modification of [Daniel Gross](https://github.com/danielgross/whatsapp-gpt) code.
 
