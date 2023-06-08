@@ -1,6 +1,5 @@
-from browser import Browser
+from .browser import Browser
 from playwright._impl._api_types import TimeoutError as PlaywrightTimeoutError
-from time import sleep
 
 class Indeed(Browser):
 
@@ -16,7 +15,7 @@ class Indeed(Browser):
 
     def fetch_jobs(self, role: str, location: str) -> list:
         self.page_address = f"https://se.indeed.com/jobs?q={role}&l={location}"
-        self.start(headless=False)
+        self.start()
 
         try:
             card_list = self.page.wait_for_selector(self.card_list_selector, timeout=5000)
@@ -61,11 +60,5 @@ class Indeed(Browser):
                 
             jobs_data.append(job_data)
 
-        print(jobs_data)
-        sleep(30)
         self.stop()
         return jobs_data
-
-
-i = Indeed()
-i.fetch_jobs("lärare", "stockholm")
